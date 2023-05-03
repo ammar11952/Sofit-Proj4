@@ -1,10 +1,24 @@
 const User = require('../db/user');
+const jwt = require('jsonwebtoken');
+
+const createToken = (id) => {
+  return jwt.sign(
+    { id },
+    'Is this a secret signature, now that it is in a public repo',
+    { expiresIn: 36000 }
+  );
+};
 
 const postUserController = async (req, res) => {
   const postUser = User.create(req.body)
     .then((doc) => {
       console.log('Successful: postUser');
-      res.status(200).send(doc);
+      const token = createToken(doc._id);
+      res.status(200).set('Auth', `Bearer ${token}`).send({
+        _id: doc._id,
+        name: doc.name,
+        email: doc.email,
+      });
     })
     .catch((err) => {
       console.log('postUser Error: ', err.message);
@@ -54,10 +68,26 @@ const putUserController = async (req, res) => {
       res.status(400).send(err.message);
     });
 };
+const loginUserController = async (req, res) => {
+  User.login(req.body)
+    .then((doc) => {
+      console.log('Successful: loginUser');
+      const token = createToken(doc._id);
+      res.status(200).set('Auth', `Bearer ${token}`).send({
+        _id: doc._id,
+        name: doc.name,
+        email: doc.email,
+      });
+    })
+    .catch((err) => {
+      console.log('loginUser Error: ', err.message);
+    });
+};
 
 module.exports = {
   postUserController,
   deleteUserController,
   getUserController,
   putUserController,
+  loginUserController,
 };
