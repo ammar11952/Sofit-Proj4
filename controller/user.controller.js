@@ -9,7 +9,6 @@ const postUserController = async (req, res) => {
     .catch((err) => {
       console.log('postUser Error: ', err.message);
       res.status(400).send(err.message);
-      //return err.message;
     });
 };
 
@@ -45,7 +44,7 @@ const getUserController = async (req, res) => {
     });
 };
 const putUserController = async (req, res) => {
-  User.findOneAndUpdate({ _id: req.params.id }, req.body /*{ $set: req.body }*/)
+  User.findOneAndUpdate({ _id: req.params.id }, req.body)
     .then((doc) => {
       console.log('Successful: putUser');
       res.status(200).send(doc);
@@ -54,27 +53,7 @@ const putUserController = async (req, res) => {
       console.log('putUser Error: ', err.message);
       res.status(400).send(err.message);
     });
-
-  // (req, res) => {
-  //   let result = await product.updateOne(
-
-  //   );
-
-  //   res.send(result);
-  // }
 };
-
-app.put('/update/:id', async (req, res) => {
-  let result = await product.updateOne(
-    { _id: req.params.id },
-
-    {
-      $set: req.body,
-    }
-  );
-
-  res.send(result);
-});
 
 module.exports = {
   postUserController,
