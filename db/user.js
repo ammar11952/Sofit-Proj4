@@ -1,4 +1,3 @@
-//const { Timestamp } = require('mongodb');
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
