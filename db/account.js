@@ -15,7 +15,7 @@ const accountSchema = new mongoose.Schema({
     validate: [validator.isIBAN, 'Incorrect IBAN'],
   },
   balance: {
-    type: float,
+    type: Number,
     min: 0,
     default: 0,
   },

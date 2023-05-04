@@ -8,16 +8,16 @@ const beneficiarySchema = new mongoose.Schema({
     required: [true, 'Beneficiary must have an initiator user id'],
     validate: [validator.isMongoId, 'Invalid initiator user id'],
   },
-  beneficiaryUserId: {
-    type: String,
-    required: [true, 'Beneficiary must have a beneficiary user id'],
-    validate: [validator.isMongoId, 'Invalid beneficiary user id'],
-  },
-  initiatorAccId: {
-    type: String,
-    required: [true, 'Beneficiary must have an initiator acc id'],
-    validate: [validator.isMongoId, 'Invalid initiator acc id'],
-  },
+  // beneficiaryUserId: {
+  //   type: String,
+  //   required: [true, 'Beneficiary must have a beneficiary user id'],
+  //   validate: [validator.isMongoId, 'Invalid beneficiary user id'],
+  // },
+  // initiatorAccId: {
+  //   type: String,
+  //   required: [true, 'Beneficiary must have an initiator acc id'],
+  //   validate: [validator.isMongoId, 'Invalid initiator acc id'],
+  // },
   beneficiaryAccId: {
     type: String,
     required: [true, 'Beneficiary must have a beneficiary acc id'],
