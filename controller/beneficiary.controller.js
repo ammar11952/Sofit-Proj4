@@ -11,9 +11,10 @@ const verifyBankAcc = async (accNo) => {
 const postBeneficiaryController = async (req, res) => {
   console.log('PostBeneficiaryController');
   const beneficiaryAccId = await verifyBankAcc(req.body.accNo);
+  //   console.log('Benig Acc ID: ', beneficiaryAccId[0]._id);
   const postBeneficiary = Beneficiary.create({
     initiatorUserId: req.mwAuthUserId,
-    beneficiaryAccId: beneficiaryAccId,
+    beneficiaryAccId: beneficiaryAccId[0]._id,
     name: req.body.name,
     contact: req.body.contact,
   })
@@ -57,27 +58,31 @@ const getBeneficiaryController = async (req, res) => {
     });
 };
 const putBeneficiaryController = async (req, res) => {
-  let updateParameter;
-  if (res.body.accNo) {
-    const beneficiaryAccId = await verifyBankAcc(req.body.accNo);
-    delete req.body.accNo;
-    updateParameter = { beneficiaryAccId, ...req.body };
-  } else updateParameter = req.body;
+  //   let updateParameter;
+  //   if (req.body.hasOwnProperty('accNo')) {
+  //     const beneficiaryAccId = await verifyBankAcc(req.body.accNo);
+  //     delete req.body.accNo;
+  //     updateParameter = { beneficiaryAccId, ...req.body };
+  //   } else updateParameter = req.body;
 
-  Beneficiary.findOneAndUpdate(
-    { userId: req.mwAuthUserId, _id: req.param.id },
-    updateParameter
-  )
-    .then((doc) => {
-      console.log(doc);
-      console.log('Successful: putBeneficiary');
-      return Beneficiary.findById(req.param.id);
-    })
-    .then((doc) => res.status(200).send(doc))
-    .catch((err) => {
-      console.log('putBeneficiary Error: ', err.message);
-      res.status(400).send(err.message);
-    });
+  //   console.log(updateParameter);
+
+  //   Beneficiary.findOneAndUpdate(
+  //     { initiatorUserId: req.mwAuthUserId, _id: req.param.id },
+  //     updateParameter
+  //   )
+  //     .then((doc) => {
+  //       console.log(doc);
+  //       console.log('Successful: putBeneficiary');
+  //       return Beneficiary.findById(req.param.id);
+  //     })
+  //     .then((doc) => res.status(200).send(doc))
+  //     .catch((err) => {
+  //       console.log('putBeneficiary Error: ', err.message);
+  //       res.status(400).send(err.message);
+  //     });
+
+  res.status(404).send(Error('This API is under maintainaince!'));
 };
 
 module.exports = {

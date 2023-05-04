@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 const requireAuth = (req, res, next) => {
-  console.log('Auth Called');
+  // console.log('Auth Called');
   let token;
   try {
     token = req.headers.auth.split(' ');
@@ -16,7 +16,7 @@ const requireAuth = (req, res, next) => {
       (err, decodedToken) => {
         if (!err) {
           req.mwAuthUserId = decodedToken.id;
-          //   console.log(decodedToken);
+          // console.log(req.mwAuthUserId);
           next();
         } else throw err;
       }
