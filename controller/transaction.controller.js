@@ -42,6 +42,7 @@ const postTransactionController = async (req, res) => {
 };
 
 const getTransactionController = async (req, res) => {
+  console.log('getTransactionController called!');
   const getTransaction = Transaction.find({
     senderAccId: req.body.senderAccId,
     receiverAccId: req.body.receiverAccId,
