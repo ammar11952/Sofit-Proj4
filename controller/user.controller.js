@@ -27,7 +27,7 @@ const postUserController = async (req, res) => {
 };
 
 const deleteUserController = async (req, res) => {
-  const deleteUser = User.findOneAndDelete(req.body)
+  const deleteUser = User.findOneAndDelete(req.mwAuthUserId)
     .then((doc) => {
       console.log('Successful: deleteUser');
       res.status(200).send(doc);
@@ -58,11 +58,18 @@ const getUserController = async (req, res) => {
     });
 };
 const putUserController = async (req, res) => {
-  User.findOneAndUpdate({ _id: req.params.id }, req.body)
+  User.findOneAndUpdate({ _id: req.mwAuthUserId }, req.body)
     .then((doc) => {
       console.log('Successful: putUser');
-      res.status(200).send(doc);
+      return User.findById({ _id: req.mwAuthUserId });
     })
+    .then((doc) =>
+      res.status(200).send({
+        _id: doc._id,
+        name: doc.name,
+        email: doc.email,
+      })
+    )
     .catch((err) => {
       console.log('putUser Error: ', err.message);
       res.status(400).send(err.message);

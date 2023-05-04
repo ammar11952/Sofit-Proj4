@@ -4,7 +4,7 @@ const requireAuth = (req, res, next) => {
   let token;
   try {
     token = req.headers.auth.split(' ');
-    if (!token || token[0] != 'Bearer') {
+    if (!token || token[0] != 'Bearer' || !req.headers.auth) {
       console.log('Auth Failed: Invalid or no token found');
       throw Error('Auth Failed: Invalid or no token found');
     }
@@ -23,7 +23,9 @@ const requireAuth = (req, res, next) => {
   } catch (err) {
     if (!token || token[0] != 'Bearer') res.status(403).send(err.nessage);
     else res.status(498).send(err.message);
+    return;
   }
+  //   res.status(401).send(Error('Auth Failed: required key not found in Header'));
 };
 
 module.exports = requireAuth;
