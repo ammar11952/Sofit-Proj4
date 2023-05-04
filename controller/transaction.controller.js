@@ -1,38 +1,44 @@
 const Transaction = require('../db/transaction');
+const Account = require('../db/account');
 
 const postTransactionController = async (req, res) => {
-  console.log('PostTransactionController');
-  const postTransaction = Transaction.create({
-    userId: req.mwAuthUserId,
-    ...req.body,
-  })
+  //   console.log('PostTransactionController');
+  senderBalance = await Account.findOne({ _id: req.body.senderAccId })
     .then((doc) => {
-      console.log('Successful: postTransaction');
-      res.status(200).send(doc);
+      return doc.balance;
     })
     .catch((err) => {
-      console.log('postTransaction Error: ', err.message);
-      res.status(400).send(err.message);
+      //   console.log('getAccount Error: ', err.message);
+      res.status(400).send('Fetch Account Details Error :', err.message);
+      return null;
     });
-};
-
-const deleteTransactionController = async (req, res) => {
-  const deleteTransaction = Transaction.findOneAndDelete({
-    userId: req.mwAuthUserId,
-    ...req.body,
-  })
-    .then((doc) => {
-      console.log('Successful: deleteTransaction');
-      res.status(200).send(doc);
-    })
-    .catch((err) => {
-      console.log('deleteTransaction Error: ', err.message);
-      res.status(400).send(err.message);
-    });
+  if (senderBalance >= req.body.amount) {
+    const postTransaction = Transaction.create(req.body)
+      .then((doc) => {
+        console.log('Successful: postTransaction');
+        senderBalance -= req.body.amount;
+        return Account.findOneAndUpdate(
+          { _id: req.body.senderAccId },
+          { balance: senderBalance }
+        );
+      })
+      .then((doc) => {
+        res.status(200).send('Transaction Successful: Balance Updated');
+      })
+      .catch((err) => {
+        console.log('postTransaction Error: ', err.message);
+        res
+          .status(400)
+          .send(
+            'UNUPDATED BALANCE AFTER TRANSACTION: PLEASE REVIEW',
+            err.message
+          );
+      });
+  } else res.status(400).send('Insufficuent Balance in sender Account!');
 };
 
 const getTransactionController = async (req, res) => {
-  const getTransaction = Transaction.find({ userId: req.mwAuthUserId })
+  const getTransaction = Transaction.find({ senderAccId: req.mwAuthUserId })
     .then((doc) => {
       console.log('Successful: getTransaction');
       res.status(200).send(doc);
@@ -42,26 +48,8 @@ const getTransactionController = async (req, res) => {
       res.status(400).send(err.message);
     });
 };
-const putTransactionController = async (req, res) => {
-  Transaction.findOneAndUpdate(
-    { userId: req.mwAuthUserId, _id: req.param.id },
-    req.body
-  )
-    .then((doc) => {
-      console.log(doc);
-      console.log('Successful: putTransaction');
-      return Transaction.findById(req.param.id);
-    })
-    .then((doc) => res.status(200).send(doc))
-    .catch((err) => {
-      console.log('putTransaction Error: ', err.message);
-      res.status(400).send(err.message);
-    });
-};
 
 module.exports = {
   postTransactionController,
-  deleteTransactionController,
   getTransactionController,
-  putTransactionController,
 };

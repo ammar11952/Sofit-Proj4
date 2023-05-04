@@ -18,12 +18,12 @@ const transactionSchema = new mongoose.Schema({
     default: 'pending',
   },
   amount: {
-    type: float,
+    type: Number,
     required: [true, 'Transaction must have an amount'],
     min: 0,
   },
 });
 
-messagesSchema.set('timestamps', true);
+transactionSchema.set('timestamps', true);
 
 module.exports = mongoose.model('Transaction', transactionSchema);
