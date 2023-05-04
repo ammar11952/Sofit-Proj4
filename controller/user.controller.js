@@ -5,7 +5,7 @@ const createToken = (id) => {
   return jwt.sign(
     { id },
     'Is this a secret signature, now that it is in a public repo',
-    { expiresIn: 36000 }
+    { expiresIn: 36000 /* 36000*/ }
   );
 };
 
@@ -61,6 +61,8 @@ const putUserController = async (req, res) => {
   User.findOneAndUpdate({ _id: req.mwAuthUserId }, req.body)
     .then((doc) => {
       console.log('Successful: putUser');
+      // console.log(doc);
+      return doc;
       return User.findById({ _id: req.mwAuthUserId });
     })
     .then((doc) =>
@@ -78,7 +80,7 @@ const putUserController = async (req, res) => {
 const loginUserController = async (req, res) => {
   User.login(req.body)
     .then((doc) => {
-      console.log('Successful: loginUser');
+      console.log('Successful: loginUser', doc._id);
       const token = createToken(doc._id);
       res.status(200).set('Auth', `Bearer ${token}`).send({
         _id: doc._id,

@@ -26,6 +26,11 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
+// userSchema.pre('findOneAndUpdate', async function (next) {
+//   this.password = await bcrypt.hash(this.password, 12);
+//   next();
+// });
+
 userSchema.statics.login = async function ({ email, password }) {
   const user = await this.findOne({ email });
   if (!user) throw Error('Invalid email: Not found');

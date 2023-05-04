@@ -31,7 +31,7 @@ const beneficiarySchema = new mongoose.Schema({
   contact: {
     type: String,
     required: [true, 'Beneficiary must have contact number'],
-    unique: true,
+    // unique: true,
     validate: [validator.isMobilePhone, 'Invalid contact number'],
   },
 });
